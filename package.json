@@ -1,0 +1,27 @@
+{
+  "name": "touche_pas_au_klaxon",
+  "version": "1.0.0",
+  "description": "Projet de covoiturage interne pour entreprise.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-css": "sass public/assets/scss/main.scss public/assets/css/main.css --no-source-map",
+    "watch-css": "sass --watch public/assets/scss/main.scss public/assets/css/main.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Luxibol/touche_pas_au_klaxon.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Luxibol/touche_pas_au_klaxon/issues"
+  },
+  "homepage": "https://github.com/Luxibol/touche_pas_au_klaxon#readme",
+  "dependencies": {
+    "bootstrap": "^5.3.6",
+    "sass": "^1.89.2"
+  }
+}
