@@ -1,12 +1,10 @@
 /vendor/
-/node_modules/
-/.DS_Store
+node_modules/
+.DS_Store
 .env
 *.log
 *.cache
 *.tmp
-/public/assets/css/
-/public/assets/scss/
 /tests/_output/
 /.idea/
 /.vscode/
