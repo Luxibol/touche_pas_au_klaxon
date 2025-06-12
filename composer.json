@@ -1,0 +1,21 @@
+{
+    "name": "mathieu/touche_pas_au_klaxon",
+    "autoload": {
+        "psr-4": {
+            "Mathieu\\TouchePasAuKlaxon\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Luxibol",
+            "email": "mathieu.billoux@outlook.fr"
+        }
+    ],
+    "require": {
+        "izniburak/router": "^3.1"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^2.1",
+        "phpunit/phpunit": "^11.5"
+    }
+}

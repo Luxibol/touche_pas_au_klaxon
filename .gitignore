@@ -8,3 +8,4 @@ node_modules/
 /tests/_output/
 /.idea/
 /.vscode/
+/public/assets/css/
