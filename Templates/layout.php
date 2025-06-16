@@ -1,5 +1,9 @@
 <?php
-// Détecte dynamiquement le dossier de base (ex: /touche_pas_au_klaxon)
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Détecte dynamiquement le dossier de base (ex: /touche_pas_au_klaxon/public)
 $base = dirname($_SERVER['SCRIPT_NAME']);
 $base = rtrim($base, '/\\');
 ?>

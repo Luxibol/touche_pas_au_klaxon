@@ -7,11 +7,34 @@ session_start();
 
 $router = new Router();
 
-// Page d'accueil
+// Route page d'accueil
 $router->get('/', function () {
-    $controller = new \App\Controllers\HomeController();
-    $controller->index();
+    (new \App\Controllers\HomeController())->index();
 });
+
+// Formulaire de connexion (GET)
+$router->get('/login', function () {
+    (new \App\Controllers\AuthController())->showLoginForm();
+});
+
+// Traitement du login (POST)
+$router->post('/login', function () {
+    (new \App\Controllers\AuthController())->login();
+});
+
+$router->get('/logout', function () {
+    session_start(); // au cas où
+    session_destroy();
+
+    // Redirige proprement vers la racine du projet
+    $base = dirname($_SERVER['SCRIPT_NAME']);
+    $base = rtrim($base, '/\\');
+    header("Location: $base/");
+    exit;
+});
+
+
+
 
 
 $router->run();
