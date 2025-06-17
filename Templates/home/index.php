@@ -54,7 +54,10 @@ $base = rtrim($base, '/\\');
                                     <!-- Boutons Modifier / Supprimer -->
                                     <?php if ($_SESSION['user']['id'] === $trajet['id_utilisateur']): ?>
                                         <a href="<?= $base ?>/trajet/edit/<?= $trajet['id'] ?>" class="btn btn-sm btn-warning">Modifier</a>
-                                        <a href="#" class="btn btn-sm btn-danger">Supprimer</a>
+                                        <form method="post" action="<?= $base ?>/trajet/delete/<?= $trajet['id'] ?>" style="display:inline;" 
+                                            onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce trajet ?');">
+                                            <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
+                                        </form>
                                     <?php endif; ?>
                                 </td>
                             <?php endif; ?>

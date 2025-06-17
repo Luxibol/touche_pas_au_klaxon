@@ -195,4 +195,34 @@ class TrajetController
         }
     }
 
+    public function delete(int $id)
+    {
+        if (!isset($_SESSION['user'])) {
+            header('Location: ' . $this->getBasePath() . '/login');
+            exit;
+        }
+
+        $base = $this->getBasePath();
+        $pdo = Database::getInstance();
+
+        // Vérifie que le trajet appartient à l'utilisateur connecté
+        $stmt = $pdo->prepare("SELECT id_utilisateur FROM trajet WHERE id = ?");
+        $stmt->execute([$id]);
+        $trajet = $stmt->fetch();
+
+        if (!$trajet || $trajet['id_utilisateur'] != $_SESSION['user']['id']) {
+            $_SESSION['error'] = 'Suppression non autorisée.';
+            header("Location: $base/");
+            exit;
+        }
+
+        // Suppression
+        $stmt = $pdo->prepare("DELETE FROM trajet WHERE id = ?");
+        $stmt->execute([$id]);
+
+        $_SESSION['success'] = 'Trajet supprimé avec succès.';
+        header("Location: $base/");
+        exit;
+    }
+
 }
