@@ -3,7 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Détecte dynamiquement le dossier de base (ex: /touche_pas_au_klaxon/public)
+// Détecte dynamiquement le dossier de base
 $base = dirname($_SERVER['SCRIPT_NAME']);
 $base = rtrim($base, '/\\');
 ?>
@@ -27,6 +27,12 @@ $base = rtrim($base, '/\\');
     </main>
 
     <?php include __DIR__ . '/partials/footer.php'; ?>
+
+    <!-- Bootstrap JS pour les modales -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
+            crossorigin="anonymous">
+    </script>
+
 
 </body>
 </html>
