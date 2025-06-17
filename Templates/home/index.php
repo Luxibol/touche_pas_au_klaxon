@@ -21,6 +21,9 @@ $isLogged = isset($_SESSION['user']);
                         <th>Date</th>
                         <th>Heure</th>
                         <th>Places</th>
+                        <?php if ($isLogged): ?>
+                            <th>Actions</th>
+                        <?php endif; ?>
                     </tr>
                 </thead>
                 <tbody>
@@ -33,6 +36,25 @@ $isLogged = isset($_SESSION['user']);
                             <td><?= date('d/m/Y', strtotime($trajet['date_arrivee'])) ?></td>
                             <td><?= date('H:i', strtotime($trajet['date_arrivee'])) ?></td>
                             <td><?= $trajet['places_disponibles'] ?></td>
+                            <?php if ($isLogged): ?>
+                                <td>
+                                    <!-- Bouton Voir -->
+                                    <button class="btn btn-sm btn-info text-white"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modal<?= $trajet['id'] ?>">
+                                        Voir
+                                    </button>
+
+                                    <!-- Inclut la modale -->
+                                    <?php $modalTrajet = $trajet; include __DIR__ . '/../partials/modal-trajet.php'; ?>
+
+                                    <!-- Boutons Modifier / Supprimer -->
+                                    <?php if ($_SESSION['user']['id'] === $trajet['id_utilisateur']): ?>
+                                        <a href="#" class="btn btn-sm btn-warning">Modifier</a>
+                                        <a href="#" class="btn btn-sm btn-danger">Supprimer</a>
+                                    <?php endif; ?>
+                                </td>
+                            <?php endif; ?>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
