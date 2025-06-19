@@ -4,13 +4,26 @@ namespace App\Controllers;
 
 use Core\Database;
 
+/**
+ * Contrôleur responsable des opérations CRUD sur les trajets.
+ */
 class TrajetController
 {
+    /**
+     * Retourne le chemin de base de l'application.
+     *
+     * @return string Le chemin de base relatif à l'application.
+     */
     private function getBasePath(): string
     {
         return rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
     }
 
+    /**
+     * Affiche le formulaire de création de trajet.
+     *
+     * Redirige vers la page de login si l'utilisateur n'est pas connecté.
+     */
     public function create()
     {
         if (!isset($_SESSION['user'])) {
@@ -28,6 +41,11 @@ class TrajetController
         require __DIR__ . '/../../Templates/layout.php';
     }
 
+    /**
+     * Traite les données envoyées depuis le formulaire de création et crée un trajet en base.
+     *
+     * Redirige avec un message en session en cas d’erreur ou de succès.
+     */
     public function store()
     {
         if (!isset($_SESSION['user'])) {
@@ -43,6 +61,7 @@ class TrajetController
         $date_arrivee = $_POST['date_arrivee'] ?? null;
         $places = $_POST['places'] ?? null;
 
+        // Validation
         if (!$depart || !$arrivee || !$date_depart || !$date_arrivee || !$places) {
             $_SESSION['error'] = 'Tous les champs sont obligatoires.';
             header("Location: $base/trajet/create");
@@ -85,5 +104,159 @@ class TrajetController
             header("Location: $base/trajet/create");
             exit;
         }
+    }
+
+    /**
+     * Affiche le formulaire de modification d’un trajet existant.
+     *
+     * @param int $id L'identifiant du trajet à modifier.
+     */
+    public function edit(int $id)
+    {
+        if (!isset($_SESSION['user'])) {
+            header('Location: ' . $this->getBasePath() . '/login');
+            exit;
+        }
+
+        $pdo = Database::getInstance();
+
+        $stmt = $pdo->prepare("
+            SELECT * FROM trajet WHERE id = :id AND id_utilisateur = :user_id
+        ");
+        $stmt->execute([
+            'id' => $id,
+            'user_id' => $_SESSION['user']['id']
+        ]);
+
+        $trajet = $stmt->fetch();
+
+        if (!$trajet) {
+            $_SESSION['error'] = "Trajet introuvable ou accès non autorisé.";
+            header('Location: ' . $this->getBasePath() . '/');
+            exit;
+        }
+
+        $agences = $pdo->query("SELECT id, ville FROM agence ORDER BY ville ASC")->fetchAll();
+
+        ob_start();
+        require __DIR__ . '/../../Templates/trajet/edit.php';
+        $content = ob_get_clean();
+
+        require __DIR__ . '/../../Templates/layout.php';
+    }
+
+    /**
+     * Met à jour un trajet existant après soumission du formulaire.
+     *
+     * @param int $id L’identifiant du trajet à mettre à jour.
+     */
+    public function update($id)
+    {
+        if (!isset($_SESSION['user'])) {
+            header('Location: ' . $this->getBasePath() . '/login');
+            exit;
+        }
+
+        $this->checkUserOwnsTrajet($id);
+        $base = $this->getBasePath();
+
+        $depart = $_POST['depart'] ?? null;
+        $arrivee = $_POST['arrivee'] ?? null;
+        $date_depart = $_POST['date_depart'] ?? null;
+        $date_arrivee = $_POST['date_arrivee'] ?? null;
+        $places = $_POST['places'] ?? null;
+
+        // Validation
+        if (!$depart || !$arrivee || !$date_depart || !$date_arrivee || !$places) {
+            $_SESSION['error'] = 'Tous les champs sont obligatoires.';
+            header("Location: $base/trajet/edit/$id");
+            exit;
+        }
+
+        if ($depart == $arrivee) {
+            $_SESSION['error'] = 'L\'agence de départ et d\'arrivée doivent être différentes.';
+            header("Location: $base/trajet/edit/$id");
+            exit;
+        }
+
+        if (strtotime($date_arrivee) <= strtotime($date_depart)) {
+            $_SESSION['error'] = 'La date d\'arrivée doit être postérieure à la date de départ.';
+            header("Location: $base/trajet/edit/$id");
+            exit;
+        }
+
+        try {
+            $pdo = Database::getInstance();
+
+            $stmt = $pdo->prepare("
+                UPDATE trajet 
+                SET id_agence_depart = :depart, id_agence_arrivee = :arrivee, 
+                    date_depart = :date_depart, date_arrivee = :date_arrivee, 
+                    places = :places
+                WHERE id = :id
+            ");
+
+            $stmt->execute([
+                'depart' => $depart,
+                'arrivee' => $arrivee,
+                'date_depart' => $date_depart,
+                'date_arrivee' => $date_arrivee,
+                'places' => $places,
+                'id' => $id
+            ]);
+
+            $_SESSION['success'] = 'Trajet modifié avec succès.';
+            header("Location: $base/");
+            exit;
+        } catch (\PDOException $e) {
+            $_SESSION['error'] = 'Erreur lors de la mise à jour : ' . $e->getMessage();
+            header("Location: $base/trajet/edit/$id");
+            exit;
+        }
+    }
+
+    /**
+     * Supprime un trajet si l'utilisateur en est propriétaire.
+     *
+     * @param int $id L’identifiant du trajet à supprimer.
+     */
+    public function delete(int $id)
+    {
+        if (!isset($_SESSION['user'])) {
+            header('Location: ' . $this->getBasePath() . '/login');
+            exit;
+        }
+
+        $this->checkUserOwnsTrajet($id);
+
+        $pdo = Database::getInstance();
+        $stmt = $pdo->prepare("DELETE FROM trajet WHERE id = ?");
+        $stmt->execute([$id]);
+
+        $_SESSION['success'] = 'Trajet supprimé avec succès.';
+        header("Location: " . $this->getBasePath() . "/");
+        exit;
+    }
+
+    /**
+     * Vérifie que le trajet appartient à l'utilisateur connecté.
+     *
+     * @param int $id L'identifiant du trajet.
+     * @return bool true si l'utilisateur est bien le propriétaire du trajet.
+     */
+    private function checkUserOwnsTrajet(int $id)
+    {
+        $pdo = Database::getInstance();
+        $stmt = $pdo->prepare("SELECT id_utilisateur FROM trajet WHERE id = ?");
+        $stmt->execute([$id]);
+        $trajet = $stmt->fetch();
+
+        if (!$trajet || $trajet['id_utilisateur'] != $_SESSION['user']['id']) {
+            $_SESSION['error'] = 'Action non autorisée.';
+            header("Location: " . $this->getBasePath() . "/");
+            exit;
+        }
+
+        return true;
     }
 }

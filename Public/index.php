@@ -39,4 +39,26 @@ $router->post('/trajet/create', function () {
     (new \App\Controllers\TrajetController())->store();
 });
 
+
+$router->get('/trajet/edit/(\d+)', function ($id) {
+    (new \App\Controllers\TrajetController())->edit($id);
+});
+
+$router->post('/trajet/edit/(\d+)', function ($id) {
+    (new \App\Controllers\TrajetController())->update($id);
+});
+
+$router->post('/trajet/delete/(\d+)', function ($id) {
+    (new \App\Controllers\TrajetController())->delete($id);
+});
+
+$router->post('/trajet/update/(\d+)', function ($id) {
+    (new \App\Controllers\TrajetController())->update($id);
+});
+
+$router->post('/trajet/delete/(\d+)', function ($id) {
+    (new \App\Controllers\TrajetController())->delete($id);
+});
+
+
 $router->run();
