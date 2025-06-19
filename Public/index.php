@@ -60,5 +60,10 @@ $router->post('/trajet/delete/(\d+)', function ($id) {
     (new \App\Controllers\TrajetController())->delete($id);
 });
 
+$router->get('/dashboard/users', function () {
+    (new \App\Controllers\AdminController())->listUsers();
+});
+
+
 
 $router->run();
