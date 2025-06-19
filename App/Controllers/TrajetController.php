@@ -4,13 +4,26 @@ namespace App\Controllers;
 
 use Core\Database;
 
+/**
+ * Contrôleur responsable des opérations CRUD sur les trajets.
+ */
 class TrajetController
 {
+    /**
+     * Retourne le chemin de base de l'application.
+     *
+     * @return string Le chemin de base relatif à l'application.
+     */
     private function getBasePath(): string
     {
         return rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
     }
 
+    /**
+     * Affiche le formulaire de création de trajet.
+     *
+     * Redirige vers la page de login si l'utilisateur n'est pas connecté.
+     */
     public function create()
     {
         if (!isset($_SESSION['user'])) {
@@ -28,6 +41,11 @@ class TrajetController
         require __DIR__ . '/../../Templates/layout.php';
     }
 
+    /**
+     * Traite les données envoyées depuis le formulaire de création et crée un trajet en base.
+     *
+     * Redirige avec un message en session en cas d’erreur ou de succès.
+     */
     public function store()
     {
         if (!isset($_SESSION['user'])) {
@@ -43,6 +61,7 @@ class TrajetController
         $date_arrivee = $_POST['date_arrivee'] ?? null;
         $places = $_POST['places'] ?? null;
 
+        // Validation
         if (!$depart || !$arrivee || !$date_depart || !$date_arrivee || !$places) {
             $_SESSION['error'] = 'Tous les champs sont obligatoires.';
             header("Location: $base/trajet/create");
@@ -87,6 +106,11 @@ class TrajetController
         }
     }
 
+    /**
+     * Affiche le formulaire de modification d’un trajet existant.
+     *
+     * @param int $id L'identifiant du trajet à modifier.
+     */
     public function edit(int $id)
     {
         if (!isset($_SESSION['user'])) {
@@ -121,6 +145,11 @@ class TrajetController
         require __DIR__ . '/../../Templates/layout.php';
     }
 
+    /**
+     * Met à jour un trajet existant après soumission du formulaire.
+     *
+     * @param int $id L’identifiant du trajet à mettre à jour.
+     */
     public function update($id)
     {
         if (!isset($_SESSION['user'])) {
@@ -128,6 +157,7 @@ class TrajetController
             exit;
         }
 
+        $this->checkUserOwnsTrajet($id);
         $base = $this->getBasePath();
 
         $depart = $_POST['depart'] ?? null;
@@ -136,6 +166,7 @@ class TrajetController
         $date_arrivee = $_POST['date_arrivee'] ?? null;
         $places = $_POST['places'] ?? null;
 
+        // Validation
         if (!$depart || !$arrivee || !$date_depart || !$date_arrivee || !$places) {
             $_SESSION['error'] = 'Tous les champs sont obligatoires.';
             header("Location: $base/trajet/edit/$id");
@@ -156,17 +187,6 @@ class TrajetController
 
         try {
             $pdo = Database::getInstance();
-
-            // Vérifie que le trajet appartient bien à l'utilisateur connecté
-            $stmtCheck = $pdo->prepare("SELECT id_utilisateur FROM trajet WHERE id = ?");
-            $stmtCheck->execute([$id]);
-            $trajet = $stmtCheck->fetch();
-
-            if (!$trajet || $trajet['id_utilisateur'] != $_SESSION['user']['id']) {
-                $_SESSION['error'] = 'Action non autorisée.';
-                header("Location: $base/");
-                exit;
-            }
 
             $stmt = $pdo->prepare("
                 UPDATE trajet 
@@ -195,6 +215,11 @@ class TrajetController
         }
     }
 
+    /**
+     * Supprime un trajet si l'utilisateur en est propriétaire.
+     *
+     * @param int $id L’identifiant du trajet à supprimer.
+     */
     public function delete(int $id)
     {
         if (!isset($_SESSION['user'])) {
@@ -202,27 +227,36 @@ class TrajetController
             exit;
         }
 
-        $base = $this->getBasePath();
-        $pdo = Database::getInstance();
+        $this->checkUserOwnsTrajet($id);
 
-        // Vérifie que le trajet appartient à l'utilisateur connecté
+        $pdo = Database::getInstance();
+        $stmt = $pdo->prepare("DELETE FROM trajet WHERE id = ?");
+        $stmt->execute([$id]);
+
+        $_SESSION['success'] = 'Trajet supprimé avec succès.';
+        header("Location: " . $this->getBasePath() . "/");
+        exit;
+    }
+
+    /**
+     * Vérifie que le trajet appartient à l'utilisateur connecté.
+     *
+     * @param int $id L'identifiant du trajet.
+     * @return bool true si l'utilisateur est bien le propriétaire du trajet.
+     */
+    private function checkUserOwnsTrajet(int $id)
+    {
+        $pdo = Database::getInstance();
         $stmt = $pdo->prepare("SELECT id_utilisateur FROM trajet WHERE id = ?");
         $stmt->execute([$id]);
         $trajet = $stmt->fetch();
 
         if (!$trajet || $trajet['id_utilisateur'] != $_SESSION['user']['id']) {
-            $_SESSION['error'] = 'Suppression non autorisée.';
-            header("Location: $base/");
+            $_SESSION['error'] = 'Action non autorisée.';
+            header("Location: " . $this->getBasePath() . "/");
             exit;
         }
 
-        // Suppression
-        $stmt = $pdo->prepare("DELETE FROM trajet WHERE id = ?");
-        $stmt->execute([$id]);
-
-        $_SESSION['success'] = 'Trajet supprimé avec succès.';
-        header("Location: $base/");
-        exit;
+        return true;
     }
-
 }

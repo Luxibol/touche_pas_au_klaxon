@@ -1,10 +1,3 @@
-<?php
-if (!isset($base)) {
-    $base = dirname($_SERVER['SCRIPT_NAME']);
-    $base = rtrim($base, '/\\');
-}
-?>
-
 <div class="container my-5" style="max-width: 600px;">
     <h2 class="mb-4 text-center">Modifier le trajet</h2>
 
@@ -51,8 +44,9 @@ if (!isset($base)) {
 
         <div class="mb-3">
             <label for="places" class="form-label">Nombre de places</label>
-            <input type="number" id="places" name="places" class="form-control"
-                   min="1" required value="<?= $trajet['places'] ?>">
+            <input type="number" id="places" name="places"
+                   class="form-control" min="1" required
+                   value="<?= $trajet['places'] ?>">
         </div>
 
         <div class="d-grid gap-2 d-md-flex justify-content-md-between">

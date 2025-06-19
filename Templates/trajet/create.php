@@ -1,11 +1,3 @@
-<?php
-// Si $base n'est pas déjà défini, on le calcule ici
-if (!isset($base)) {
-    $base = dirname($_SERVER['SCRIPT_NAME']);
-    $base = rtrim($base, '/\\');
-}
-?>
-
 <div class="container my-5" style="max-width: 600px;">
     <h2 class="mb-4 text-center">Créer un trajet</h2>
 
@@ -15,7 +7,9 @@ if (!isset($base)) {
             <select id="depart" name="depart" class="form-select" required>
                 <option value="">Choisir...</option>
                 <?php foreach ($agences as $agence): ?>
-                    <option value="<?= $agence['id'] ?>"><?= htmlspecialchars($agence['ville']) ?></option>
+                    <option value="<?= $agence['id'] ?>">
+                        <?= htmlspecialchars($agence['ville']) ?>
+                    </option>
                 <?php endforeach; ?>
             </select>
         </div>
@@ -25,7 +19,9 @@ if (!isset($base)) {
             <select id="arrivee" name="arrivee" class="form-select" required>
                 <option value="">Choisir...</option>
                 <?php foreach ($agences as $agence): ?>
-                    <option value="<?= $agence['id'] ?>"><?= htmlspecialchars($agence['ville']) ?></option>
+                    <option value="<?= $agence['id'] ?>">
+                        <?= htmlspecialchars($agence['ville']) ?>
+                    </option>
                 <?php endforeach; ?>
             </select>
         </div>
@@ -54,8 +50,9 @@ if (!isset($base)) {
             </p>
         </div>
 
-        <div class="d-grid">
+        <div class="d-grid gap-2 d-md-flex justify-content-md-between">
             <button type="submit" class="btn btn-primary">Créer le trajet</button>
+            <a href="<?= $base ?>/" class="btn btn-secondary">Annuler</a>
         </div>
     </form>
 </div>
