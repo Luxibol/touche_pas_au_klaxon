@@ -153,6 +153,30 @@ class AdminController
     }
 
     /**
+     * Supprime une agence par son identifiant.
+     *
+     * @param int $id L'identifiant de l'agence à supprimer.
+     */
+    public function deleteAgence(int $id)
+    {
+        $this->checkAdmin();
+
+        $pdo = Database::getInstance();
+
+        try {
+            $stmt = $pdo->prepare("DELETE FROM agence WHERE id = :id");
+            $stmt->execute(['id' => $id]);
+
+            $_SESSION['success'] = 'Agence supprimée avec succès.';
+        } catch (\PDOException $e) {
+            $_SESSION['error'] = 'Erreur lors de la suppression : ' . $e->getMessage();
+        }
+
+        header('Location: ' . dirname($_SERVER['SCRIPT_NAME']) . '/dashboard/agences');
+        exit;
+    }
+
+    /**
      * Vérifie si l'utilisateur connecté est un administrateur.
      * Redirige avec une erreur sinon.
      */
