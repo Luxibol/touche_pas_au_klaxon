@@ -42,10 +42,10 @@ $base = rtrim($base, '/\\');
                             <?php if ($isLogged): ?>
                                 <td>
                                     <!-- Bouton Voir -->
-                                    <button class="btn btn-sm btn-info text-white"
+                                    <button class="btn btn-secondary btn-sm"
                                             data-bs-toggle="modal"
                                             data-bs-target="#modal<?= $trajet['id'] ?>">
-                                        Voir
+                                        Détails
                                     </button>
 
                                     <!-- Inclut la modale -->

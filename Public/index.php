@@ -60,5 +60,46 @@ $router->post('/trajet/delete/(\d+)', function ($id) {
     (new \App\Controllers\TrajetController())->delete($id);
 });
 
+$router->get('/dashboard/users', function () {
+    (new \App\Controllers\AdminController())->listUsers();
+});
+
+use App\Controllers\AdminController;
+
+// Liste des agences
+$router->get('/dashboard/agences', function () {
+    (new \App\Controllers\AdminController())->listAgences();
+});
+
+// Formulaire de création d’une agence
+$router->get('/dashboard/agences/create', function () {
+    (new \App\Controllers\AdminController())->createAgenceForm();
+});
+$router->post('/dashboard/agences/create', function () {
+    (new \App\Controllers\AdminController())->storeAgence();
+});
+
+// Formulaire de modification d’une agence
+$router->get('/dashboard/agences/edit/(\d+)', function ($id) {
+    (new \App\Controllers\AdminController())->editAgenceForm($id);
+});
+$router->post('/dashboard/agences/edit/(\d+)', function ($id) {
+    (new \App\Controllers\AdminController())->updateAgence($id);
+});
+
+// Suppression d’une agence
+$router->post('/dashboard/agences/delete/(\d+)', function ($id) {
+    (new \App\Controllers\AdminController())->deleteAgence($id);
+});
+
+$router->get('/dashboard/trajets', function () {
+    (new \App\Controllers\AdminController())->listTrajets();
+});
+
+$router->post('/dashboard/trajets/delete/(\d+)', function ($id) {
+    (new \App\Controllers\AdminController())->deleteTrajet($id);
+});
+
+
 
 $router->run();

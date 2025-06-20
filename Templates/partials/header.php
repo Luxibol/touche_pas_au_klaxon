@@ -16,18 +16,25 @@ $isAdmin = $isLogged && ($_SESSION['user']['est_admin'] ?? false);
                 <?php if (!$isLogged): ?>
                     <a href="<?= $base ?>/login" class="btn btn-light text-primary">Connexion</a>
 
-                <?php elseif ($isAdmin): ?>
-                    <a href="<?= $base ?>/dashboard/users" class="text-white text-decoration-none">Utilisateurs</a>
-                    <a href="<?= $base ?>/dashboard/agences" class="text-white text-decoration-none">Agences</a>
-                    <a href="<?= $base ?>/dashboard/trajets" class="text-white text-decoration-none">Trajets</a>
-                    <a href="<?= $base ?>/logout" class="btn btn-light text-primary ms-2">Déconnexion</a>
-
                 <?php else: ?>
+
+                    <!-- Liens utilisateur -->
+                    <a href="<?= $base ?>/trajet/create" class="btn btn-light text-primary">Créer un trajet</a>
+
+                    <!-- Liens admin (si admin) -->
+                    <?php if ($isAdmin): ?>
+                        <a href="<?= $base ?>/dashboard/users" class="btn btn-admin">Utilisateurs</a>
+                        <a href="<?= $base ?>/dashboard/agences" class="btn btn-admin">Agences</a>
+                        <a href="<?= $base ?>/dashboard/trajets" class="btn btn-admin">Trajets</a>
+                    <?php endif; ?>
+
+                    <!-- Nom de l'utilisateur -->
                     <span>
-                        <?= htmlspecialchars($_SESSION['user']['prenom']) ?>
+                        Bonjour <?= htmlspecialchars($_SESSION['user']['prenom']) ?>
                         <?= htmlspecialchars($_SESSION['user']['nom']) ?>
                     </span>
-                    <a href="<?= $base ?>/trajet/create" class="btn btn-light text-primary">Créer un trajet</a>
+
+                    <!-- Déconnexion -->
                     <a href="<?= $base ?>/logout" class="btn btn-light text-primary">Déconnexion</a>
                 <?php endif; ?>
             </div>
