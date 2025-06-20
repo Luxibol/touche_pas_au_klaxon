@@ -26,9 +26,13 @@ class Database
     public static function getInstance(): PDO
     {
         if (self::$instance === null) {
-            $dsn = 'mysql:host=localhost;dbname=touche_pas_au_klaxon;charset=utf8';
-            $user = 'root';
-            $password = '';
+            // Lecture des variables d'environnement
+            $host = getenv('DB_HOST') ?: 'localhost';
+            $dbname = getenv('DB_NAME') ?: 'touche_pas_au_klaxon';
+            $user = getenv('DB_USER') ?: 'root';
+            $password = getenv('DB_PASS') ?: '';
+
+            $dsn = "mysql:host=$host;dbname=$dbname;charset=utf8";
 
             try {
                 self::$instance = new PDO($dsn, $user, $password);
@@ -41,4 +45,3 @@ class Database
         return self::$instance;
     }
 }
-
