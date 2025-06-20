@@ -5,6 +5,9 @@ namespace App\Controllers;
 use Core\Database;
 use PDO;
 
+/**
+ * Contrôleur d'administration : gestion des utilisateurs, agences et trajets.
+ */
 class AdminController extends BaseController
 {
     /**
@@ -43,6 +46,9 @@ class AdminController extends BaseController
         require __DIR__ . '/../../Templates/layout.php';
     }
 
+    /**
+     * Affiche le formulaire de création d'une agence.
+     */
     public function createAgenceForm()  
     {
         $this->requireAdmin();
@@ -55,6 +61,9 @@ class AdminController extends BaseController
     require __DIR__ . '/../../Templates/layout.php';
     }
 
+    /**
+     * Enregistre une nouvelle agence après validation du formulaire.
+     */
     public function storeAgence()
     {
         $this->requireAdmin();
@@ -166,6 +175,9 @@ class AdminController extends BaseController
         $this->redirect('/dashboard/agences');
     }
 
+    /**
+     * Affiche la liste des trajets existants pour l’administrateur.
+     */
     public function listTrajets()
     {
         $this->requireAdmin();
@@ -190,6 +202,11 @@ class AdminController extends BaseController
         require __DIR__ . '/../../Templates/layout.php';
     }
 
+    /**
+     * Supprime un trajet par son identifiant.
+     *
+     * @param int $id Identifiant du trajet à supprimer.
+     */
     public function deleteTrajet(int $id)
     {
         $this->requireAdmin();

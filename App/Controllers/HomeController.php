@@ -5,8 +5,15 @@ namespace App\Controllers;
 use Core\Database;
 use PDO;
 
+/**
+ * Contrôleur de la page d'accueil.
+ * Affiche la liste des trajets à venir visibles pour tous les utilisateurs.
+ */
 class HomeController
 {
+    /**
+     * Affiche la page d’accueil avec la liste des trajets à venir.
+     */
     public function index()
     {
         $pdo = Database::getInstance();

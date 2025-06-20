@@ -5,10 +5,24 @@ namespace Core;
 use PDO;
 use PDOException;
 
+/**
+ * Classe responsable de fournir une unique connexion PDO à la base de données.
+ * Cette connexion est partagée dans toute l'application.
+ */
 class Database
 {
     private static ?PDO $instance = null;
 
+    /**
+     * Empêche l'instanciation externe de la classe.
+     */
+    private function __construct() {}
+
+    /**
+     * Retourne une instance PDO unique pour la connexion à la base de données.
+     *
+     * @return PDO
+     */
     public static function getInstance(): PDO
     {
         if (self::$instance === null) {
@@ -27,3 +41,4 @@ class Database
         return self::$instance;
     }
 }
+

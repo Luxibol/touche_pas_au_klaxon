@@ -5,6 +5,10 @@ namespace App\Controllers;
 use Core\Database;
 use App\Controllers\BaseController;
 
+/**
+ * Contrôleur d'authentification des utilisateurs.
+ * Gère l'affichage du formulaire de connexion et la validation des identifiants.
+ */
 class AuthController extends BaseController
 {
     /**

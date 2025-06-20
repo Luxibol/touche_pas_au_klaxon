@@ -2,6 +2,9 @@
 
 namespace App\Controllers;
 
+/**
+ * Contrôleur de base contenant des méthodes utilitaires communes à tous les autres contrôleurs.
+ */
 class BaseController
 {
     /**
