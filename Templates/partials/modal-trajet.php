@@ -1,4 +1,10 @@
-<!-- Modale pour voir les détails du trajet -->
+<?php
+/**
+ * Modale Bootstrap affichant les détails d’un trajet :
+ * utilisateur, contact et nombre de places disponibles.
+ */
+?>
+
 <div class="modal fade" id="modal<?= $modalTrajet['id'] ?>" tabindex="-1" aria-labelledby="modalLabel<?= $modalTrajet['id'] ?>" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content text-start">

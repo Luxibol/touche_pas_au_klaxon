@@ -1,3 +1,11 @@
+<?php
+/**
+ * Vue : Liste des utilisateurs de la plateforme.
+ *
+ * Affiche un tableau avec les informations principales (rôle, contact).
+ */
+?>
+
 <div class="container my-5">
     <h2 class="mb-4 text-center">Liste des utilisateurs</h2>
 

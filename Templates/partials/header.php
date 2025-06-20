@@ -1,4 +1,8 @@
 <?php
+/**
+ * En-tête affiché sur toutes les pages.
+ * Affiche le nom du site, le menu principal, les liens admin et utilisateur.
+ */
 $isLogged = isset($_SESSION['user']);
 $isAdmin = $isLogged && ($_SESSION['user']['est_admin'] ?? false);
 ?>
@@ -18,7 +22,7 @@ $isAdmin = $isLogged && ($_SESSION['user']['est_admin'] ?? false);
 
                 <?php else: ?>
 
-                    <!-- Liens utilisateur -->
+                    <!-- Lien création de trajet pour tous les utilisateurs -->
                     <a href="<?= $base ?>/trajet/create" class="btn btn-light text-primary">Créer un trajet</a>
 
                     <!-- Liens admin (si admin) -->

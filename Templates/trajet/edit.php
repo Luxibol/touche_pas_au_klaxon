@@ -1,4 +1,12 @@
-<?php $base = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\'); ?>
+<?php
+/**
+ * Vue : Formulaire de modification d’un trajet existant.
+ *
+ * Pré-remplit les champs avec les données du trajet actuel,
+ * permet la modification uniquement si l’utilisateur est propriétaire.
+ */
+$base = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
+?>
 
 <div class="container my-5" style="max-width: 600px;">
     <h2 class="mb-4 text-center">Modifier le trajet</h2>
@@ -9,8 +17,7 @@
             <select id="depart" name="depart" class="form-select" required>
                 <option value="">Choisir...</option>
                 <?php foreach ($agences as $agence): ?>
-                    <option value="<?= $agence['id'] ?>"
-                        <?= $trajet['id_agence_depart'] == $agence['id'] ? 'selected' : '' ?>>
+                    <option value="<?= $agence['id'] ?>" <?= $trajet['id_agence_depart'] == $agence['id'] ? 'selected' : '' ?>>
                         <?= htmlspecialchars($agence['ville']) ?>
                     </option>
                 <?php endforeach; ?>
@@ -22,8 +29,7 @@
             <select id="arrivee" name="arrivee" class="form-select" required>
                 <option value="">Choisir...</option>
                 <?php foreach ($agences as $agence): ?>
-                    <option value="<?= $agence['id'] ?>"
-                        <?= $trajet['id_agence_arrivee'] == $agence['id'] ? 'selected' : '' ?>>
+                    <option value="<?= $agence['id'] ?>" <?= $trajet['id_agence_arrivee'] == $agence['id'] ? 'selected' : '' ?>>
                         <?= htmlspecialchars($agence['ville']) ?>
                     </option>
                 <?php endforeach; ?>
