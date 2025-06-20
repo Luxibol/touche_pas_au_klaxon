@@ -64,6 +64,10 @@ $router->get('/dashboard/users', function () {
     (new \App\Controllers\AdminController())->listUsers();
 });
 
+$router->get('/dashboard/agences', function () {
+    (new \App\Controllers\AdminController())->listAgences();
+});
+
 
 
 $router->run();

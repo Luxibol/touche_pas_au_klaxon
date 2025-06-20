@@ -1,7 +1,3 @@
-<?php
-$base = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
-?>
-
 <div class="container my-5">
     <h2 class="mb-4 text-center">Liste des utilisateurs</h2>
 

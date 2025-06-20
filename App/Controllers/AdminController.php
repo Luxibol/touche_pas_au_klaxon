@@ -29,4 +29,27 @@ class AdminController
 
         require __DIR__ . '/../../Templates/layout.php';
     }
+
+    /**
+     * Affiche la liste des agences pour l’administrateur.
+     */
+    public function listAgences()
+    {
+        if (!isset($_SESSION['user']) || !($_SESSION['user']['est_admin'] ?? false)) {
+            $_SESSION['error'] = 'Accès non autorisé.';
+            header('Location: ' . dirname($_SERVER['SCRIPT_NAME']) . '/');
+            exit;
+        }
+
+        $pdo = Database::getInstance();
+        $stmt = $pdo->query("SELECT id, ville FROM agence ORDER BY ville ASC");
+        $agences = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        ob_start();
+        require __DIR__ . '/../../Templates/admin/agences.php';
+        $content = ob_get_clean();
+
+        require __DIR__ . '/../../Templates/layout.php';
+    }
+
 }
