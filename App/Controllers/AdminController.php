@@ -52,4 +52,51 @@ class AdminController
         require __DIR__ . '/../../Templates/layout.php';
     }
 
+    public function createAgenceForm()  
+    {
+    if (!isset($_SESSION['user']) || !($_SESSION['user']['est_admin'] ?? false)) {
+        $_SESSION['error'] = 'Accès non autorisé.';
+        header('Location: ' . dirname($_SERVER['SCRIPT_NAME']) . '/');
+        exit;
+    }
+
+    ob_start();
+    require __DIR__ . '/../../Templates/admin/agences-create.php';
+    $content = ob_get_clean();
+
+    require __DIR__ . '/../../Templates/layout.php';
+    }
+
+    public function storeAgence()
+    {
+        if (!isset($_SESSION['user']) || !($_SESSION['user']['est_admin'] ?? false)) {
+            $_SESSION['error'] = 'Accès non autorisé.';
+            header('Location: ' . dirname($_SERVER['SCRIPT_NAME']) . '/');
+            exit;
+        }
+
+        $ville = trim($_POST['ville'] ?? '');
+
+        if (empty($ville)) {
+            $_SESSION['error'] = 'Le nom de la ville est requis.';
+            header('Location: ' . dirname($_SERVER['SCRIPT_NAME']) . '/dashboard/agences/create');
+            exit;
+        }
+
+        $pdo = Database::getInstance();
+
+        try {
+            $stmt = $pdo->prepare("INSERT INTO agence (ville) VALUES (:ville)");
+            $stmt->execute(['ville' => $ville]);
+
+            $_SESSION['success'] = 'Agence ajoutée avec succès.';
+            header('Location: ' . dirname($_SERVER['SCRIPT_NAME']) . '/dashboard/agences');
+            exit;
+        } catch (\PDOException $e) {
+            $_SESSION['error'] = "Erreur : " . $e->getMessage();
+            header('Location: ' . dirname($_SERVER['SCRIPT_NAME']) . '/dashboard/agences/create');
+            exit;
+        }
+    }
+
 }
