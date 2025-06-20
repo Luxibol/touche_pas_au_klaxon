@@ -1,3 +1,11 @@
+/**
+ * Fichier : _buttons.scss
+ *
+ * Définit les styles personnalisés pour les boutons spécifiques à l’interface,
+ * notamment le bouton `.btn-admin` destiné aux actions administrateur.
+ */
+
+ // Bouton pour les actions réservées aux administrateurs
 .btn-admin.btn {
     background-color: $dark;
     color: $info;

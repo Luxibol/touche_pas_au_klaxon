@@ -1,4 +1,11 @@
-<?php $base = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\'); ?>
+<?php
+/**
+ * Vue : Liste des trajets enregistrés.
+ *
+ * Accessible uniquement à l’admin. Affiche un tableau avec bouton de suppression.
+ */
+$base = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
+?>
 
 <div class="container my-5">
     <h2 class="mb-4 text-center">Liste des trajets</h2>

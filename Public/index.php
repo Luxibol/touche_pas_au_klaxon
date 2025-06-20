@@ -33,6 +33,7 @@ $router->get('/trajet/create', fn() => (new TrajetController())->create());
 $router->post('/trajet/create', fn() => (new TrajetController())->store());
 $router->get('/trajet/edit/(\d+)', fn($id) => (new TrajetController())->edit($id));
 $router->post('/trajet/edit/(\d+)', fn($id) => (new TrajetController())->update($id));
+$router->post('/trajet/update/(\d+)', fn($id) => (new TrajetController())->update($id));
 $router->post('/trajet/delete/(\d+)', fn($id) => (new TrajetController())->delete($id));
 
 /**

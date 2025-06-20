@@ -1,4 +1,11 @@
-<?php $base = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\'); ?>
+<?php
+/**
+ * Vue : Liste des agences existantes.
+ *
+ * Affiche un tableau des agences avec des boutons pour modifier ou supprimer.
+ */
+$base = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
+?>
 
 <div class="container my-5">
     <h2 class="mb-4 text-center">Liste des agences</h2>

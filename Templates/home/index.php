@@ -1,7 +1,11 @@
 <?php
+/**
+ * Vue : Page d’accueil listant les trajets disponibles.
+ * Affiche un tableau avec les informations de chaque trajet,
+ * et des actions selon que l’utilisateur est connecté ou non.
+ */
 $isLogged = isset($_SESSION['user']);
-$base = dirname($_SERVER['SCRIPT_NAME']);
-$base = rtrim($base, '/\\');
+$base = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
 ?>
 
 

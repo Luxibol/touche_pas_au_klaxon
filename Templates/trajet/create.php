@@ -1,4 +1,12 @@
-<?php $base = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\'); ?>
+<?php
+/**
+ * Vue : Formulaire de création d’un trajet.
+ *
+ * Affiche une liste déroulante des agences, les champs date/heure, le nombre de places,
+ * et un résumé des informations personnelles du conducteur.
+ */
+$base = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
+?>
 
 <div class="container my-5" style="max-width: 600px;">
     <h2 class="mb-4 text-center">Créer un trajet</h2>

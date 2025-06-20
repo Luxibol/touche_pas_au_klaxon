@@ -1,4 +1,12 @@
-<?php $base = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\'); ?>
+<?php
+/**
+ * Vue : Formulaire de création d’une agence.
+ *
+ * Permet à un administrateur d’ajouter une nouvelle agence
+ * avec les champs "nom" et "ville".
+ */
+$base = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
+?>
 
 <div class="container my-5" style="max-width: 500px;">
     <h2 class="mb-4 text-center">Ajouter une agence</h2>

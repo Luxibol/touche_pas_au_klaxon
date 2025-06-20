@@ -1,4 +1,11 @@
-<?php $base = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\'); ?>
+<?php
+/**
+ * Vue : Formulaire d’édition d’une agence.
+ *
+ * Affiche les informations d’une agence existante pour les modifier.
+ */
+$base = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
+?>
 
 <div class="container my-5" style="max-width: 600px;">
     <h2 class="mb-4 text-center">Modifier une agence</h2>
