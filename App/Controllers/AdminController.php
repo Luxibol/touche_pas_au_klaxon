@@ -5,15 +5,14 @@ namespace App\Controllers;
 use Core\Database;
 use PDO;
 
-class AdminController
+class AdminController extends BaseController
 {
     /**
      * Affiche la liste des utilisateurs pour l’administrateur.
      */
     public function listUsers()
     {
-        $this->checkAdmin();
-
+        $this->requireAdmin();
 
         $pdo = Database::getInstance();
         $stmt = $pdo->query("SELECT id, nom, prenom, email, téléphone, est_admin FROM utilisateur ORDER BY nom ASC");
@@ -31,8 +30,7 @@ class AdminController
      */
     public function listAgences()
     {
-        $this->checkAdmin();
-
+        $this->requireAdmin();
 
         $pdo = Database::getInstance();
         $stmt = $pdo->query("SELECT id, ville FROM agence ORDER BY ville ASC");
@@ -47,7 +45,7 @@ class AdminController
 
     public function createAgenceForm()  
     {
-        $this->checkAdmin();
+        $this->requireAdmin();
 
 
     ob_start();
@@ -59,15 +57,14 @@ class AdminController
 
     public function storeAgence()
     {
-        $this->checkAdmin();
+        $this->requireAdmin();
 
         $nom = trim($_POST['nom'] ?? '');
         $ville = trim($_POST['ville'] ?? '');
 
         if (empty($nom) || empty($ville)) {
             $_SESSION['error'] = 'Le nom et la ville sont requis.';
-            header('Location: ' . dirname($_SERVER['SCRIPT_NAME']) . '/dashboard/agences/create');
-            exit;
+            $this->redirect('/dashboard/agences/create');
         }
 
         $pdo = Database::getInstance();
@@ -80,12 +77,10 @@ class AdminController
             ]);
 
             $_SESSION['success'] = 'Agence ajoutée avec succès.';
-            header('Location: ' . dirname($_SERVER['SCRIPT_NAME']) . '/dashboard/agences');
-            exit;
+            $this->redirect('/dashboard/agences');
         } catch (\PDOException $e) {
             $_SESSION['error'] = "Erreur : " . $e->getMessage();
-            header('Location: ' . dirname($_SERVER['SCRIPT_NAME']) . '/dashboard/agences/create');
-            exit;
+            $this->redirect('/dashboard/agences/create');
         }
     }
 
@@ -96,7 +91,7 @@ class AdminController
      */
     public function editAgenceForm(int $id)
     {
-        $this->checkAdmin();
+        $this->requireAdmin();
 
         $pdo = Database::getInstance();
         $stmt = $pdo->prepare("SELECT * FROM agence WHERE id = ?");
@@ -105,8 +100,7 @@ class AdminController
 
         if (!$agence) {
             $_SESSION['error'] = "Agence introuvable.";
-            header('Location: ' . dirname($_SERVER['SCRIPT_NAME']) . '/dashboard/agences');
-            exit;
+            $this->redirect('/dashboard/agences');
         }
 
         ob_start();
@@ -123,15 +117,14 @@ class AdminController
      */
     public function updateAgence(int $id)
     {
-        $this->checkAdmin();
+        $this->requireAdmin();
 
         $nom = trim($_POST['nom'] ?? '');
         $ville = trim($_POST['ville'] ?? '');
 
         if (empty($nom) || empty($ville)) {
             $_SESSION['error'] = 'Le nom et la ville sont requis.';
-            header('Location: ' . dirname($_SERVER['SCRIPT_NAME']) . "/dashboard/agences/edit/$id");
-            exit;
+            $this->redirect("/dashboard/agences/edit/$id");
         }
 
         $pdo = Database::getInstance();
@@ -143,12 +136,10 @@ class AdminController
                 'id' => $id]);
 
             $_SESSION['success'] = 'Agence mise à jour avec succès.';
-            header('Location: ' . dirname($_SERVER['SCRIPT_NAME']) . '/dashboard/agences');
-            exit;
+            $this->redirect('/dashboard/agences');
         } catch (\PDOException $e) {
             $_SESSION['error'] = "Erreur : " . $e->getMessage();
-            header('Location: ' . dirname($_SERVER['SCRIPT_NAME']) . "/dashboard/agences/edit/$id");
-            exit;
+            $this->redirect("/dashboard/agences/edit/$id");
         }
     }
 
@@ -159,7 +150,7 @@ class AdminController
      */
     public function deleteAgence(int $id)
     {
-        $this->checkAdmin();
+        $this->requireAdmin();
 
         $pdo = Database::getInstance();
 
@@ -172,13 +163,12 @@ class AdminController
             $_SESSION['error'] = 'Erreur lors de la suppression : ' . $e->getMessage();
         }
 
-        header('Location: ' . dirname($_SERVER['SCRIPT_NAME']) . '/dashboard/agences');
-        exit;
+        $this->redirect('/dashboard/agences');
     }
 
     public function listTrajets()
     {
-        $this->checkAdmin();
+        $this->requireAdmin();
 
         $pdo = Database::getInstance();
 
@@ -202,7 +192,7 @@ class AdminController
 
     public function deleteTrajet(int $id)
     {
-        $this->checkAdmin();
+        $this->requireAdmin();
 
         $pdo = Database::getInstance();
 
@@ -210,21 +200,6 @@ class AdminController
         $stmt->execute([$id]);
 
         $_SESSION['success'] = 'Trajet supprimé avec succès.';
-        header('Location: ' . dirname($_SERVER['SCRIPT_NAME']) . '/dashboard/trajets');
-        exit;
+        $this->redirect('/dashboard/trajets');
     }
-
-    /**
-     * Vérifie si l'utilisateur connecté est un administrateur.
-     * Redirige avec une erreur sinon.
-     */
-    private function checkAdmin(): void
-    {
-        if (!isset($_SESSION['user']) || !($_SESSION['user']['est_admin'] ?? false)) {
-            $_SESSION['error'] = 'Accès non autorisé.';
-            header('Location: ' . dirname($_SERVER['SCRIPT_NAME']) . '/');
-            exit;
-        }
-    }
-
 }

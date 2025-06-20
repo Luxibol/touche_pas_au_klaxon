@@ -28,7 +28,7 @@ class HomeController
             JOIN agence a1 ON t.id_agence_depart = a1.id
             JOIN agence a2 ON t.id_agence_arrivee = a2.id
             JOIN utilisateur u ON t.id_utilisateur = u.id
-            -- WHERE t.date_depart > NOW()
+            WHERE t.date_depart > NOW()
             ORDER BY t.date_depart ASC
         ";
 

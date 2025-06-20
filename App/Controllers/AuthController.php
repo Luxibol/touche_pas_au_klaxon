@@ -3,14 +3,17 @@
 namespace App\Controllers;
 
 use Core\Database;
+use App\Controllers\BaseController;
 
-class AuthController
+class AuthController extends BaseController
 {
+    /**
+     * Affiche le formulaire de connexion.
+     *
+     * Charge la vue de connexion dans le layout principal.
+     */
     public function showLoginForm()
     {
-        $base = dirname($_SERVER['SCRIPT_NAME']);
-        $base = rtrim($base, '/\\');
-
         ob_start();
         require __DIR__ . '/../../Templates/auth/login.php';
         $content = ob_get_clean();
@@ -18,18 +21,19 @@ class AuthController
         require __DIR__ . '/../../Templates/layout.php';
     }
 
+    /**
+     * Traite les identifiants envoyés par le formulaire de connexion.
+     *
+     * Vérifie les informations, crée une session si succès, redirige sinon.
+     */
     public function login()
     {
-        $base = dirname($_SERVER['SCRIPT_NAME']);
-        $base = rtrim($base, '/\\');
-
         $email = $_POST['email'] ?? '';
         $password = $_POST['password'] ?? '';
 
         if (empty($email) || empty($password)) {
             $_SESSION['error'] = 'Veuillez remplir tous les champs.';
-            header("Location: $base/login");
-            exit;
+            $this->redirect('/');
         }
 
         $pdo = Database::getInstance();
@@ -39,12 +43,10 @@ class AuthController
 
         if ($user && password_verify($password, $user['mot_de_passe'])) {
             $_SESSION['user'] = $user;
-            header("Location: $base/");
-            exit;
+            $this->redirect('/');
         } else {
             $_SESSION['error'] = 'Identifiants invalides.';
-            header("Location: $base/login");
-            exit;
+            $this->redirect('/login');
         }
     }
 }
