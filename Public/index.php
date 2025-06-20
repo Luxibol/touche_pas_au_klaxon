@@ -92,6 +92,14 @@ $router->post('/dashboard/agences/delete/(\d+)', function ($id) {
     (new \App\Controllers\AdminController())->deleteAgence($id);
 });
 
+$router->get('/dashboard/trajets', function () {
+    (new \App\Controllers\AdminController())->listTrajets();
+});
+
+$router->post('/dashboard/trajets/delete/(\d+)', function ($id) {
+    (new \App\Controllers\AdminController())->deleteTrajet($id);
+});
+
 
 
 $router->run();

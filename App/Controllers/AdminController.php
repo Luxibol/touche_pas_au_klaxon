@@ -176,6 +176,44 @@ class AdminController
         exit;
     }
 
+    public function listTrajets()
+    {
+        $this->checkAdmin();
+
+        $pdo = Database::getInstance();
+
+        $stmt = $pdo->query("
+            SELECT t.id, a1.ville AS depart, a2.ville AS arrivee,
+                t.date_depart, t.date_arrivee, t.places
+            FROM trajet t
+            JOIN agence a1 ON t.id_agence_depart = a1.id
+            JOIN agence a2 ON t.id_agence_arrivee = a2.id
+            ORDER BY t.date_depart ASC
+        ");
+
+        $trajets = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        ob_start();
+        require __DIR__ . '/../../Templates/admin/trajets.php';
+        $content = ob_get_clean();
+
+        require __DIR__ . '/../../Templates/layout.php';
+    }
+
+    public function deleteTrajet(int $id)
+    {
+        $this->checkAdmin();
+
+        $pdo = Database::getInstance();
+
+        $stmt = $pdo->prepare("DELETE FROM trajet WHERE id = ?");
+        $stmt->execute([$id]);
+
+        $_SESSION['success'] = 'Trajet supprimé avec succès.';
+        header('Location: ' . dirname($_SERVER['SCRIPT_NAME']) . '/dashboard/trajets');
+        exit;
+    }
+
     /**
      * Vérifie si l'utilisateur connecté est un administrateur.
      * Redirige avec une erreur sinon.
